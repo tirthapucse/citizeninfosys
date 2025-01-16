@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\Storage;
 
 class HomeownerController extends Controller
 {
+
     public function updateProfile(Request $request)
     {
+        dd($request->all());
         $user = Auth::user();
 
         if ($user->role !== 'homeowner') {

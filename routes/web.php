@@ -19,5 +19,5 @@ Route::get('tenant/dashboard', [AccountController::class, 'tenantDashboard'])->n
 Route::get('tenant/profile', [AccountController::class, 'tenantProfile'])->name('tenant.profile');
 
 Route::get('homeowner/dashboard', [AccountController::class, 'homeownerDashboard'])->name('homeowner.dashboard');
-Route::get('homeowner/update-profile', [HomeownerController::class, 'edit'])->name('homeowner.editProfile');
+Route::get('homeowner/edit-profile', [HomeownerController::class, 'edit'])->name('homeowner.editProfile');
 Route::post('homeowner/update-profile', [HomeownerController::class, 'updateProfile'])->name('homeowner.updateProfile');

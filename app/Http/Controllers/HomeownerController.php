@@ -12,10 +12,11 @@ class HomeownerController extends Controller
 
     public function updateProfile(Request $request)
     {
-        dd($request->all());
+        //dd($request->all());
         $user = Auth::user();
-
+        //dd($request->all());
         if ($user->role !== 'homeowner') {
+            //dd($request->all());
             return redirect()->route('home')->with('error', 'Unauthorized action.');
         }
 
@@ -34,23 +35,53 @@ class HomeownerController extends Controller
             'religion' => 'required|string|max:50',
         ]);
 
-        $homeowner = Homeowners::where('user_id', $user->id)->firstOrFail();
+        try {
+            $homeowner = Homeowners::where('user_id', $user->id)->first();
+            if (empty($homeowner)) {
+                $homeowner = new Homeowners();
+                $homeowner->create([
+                    'user_id' => $user->id,
+                    'full_name' => $request->full_name,
+                    'image' => $request->file('image') ? $request->file('image')->store(public_path('uploads/profile')) : $homeowner->image,
+                    'national_id' => $request->national_id,
+                    'nid_front_image' => $request->file('nid_front_image') ? $request->file('nid_front_image')->store('homeowners') : $homeowner->nid_front_image,
+                    'nid_back_image' => $request->file('nid_back_image') ? $request->file('nid_back_image')->store('homeowners') : $homeowner->nid_back_image,
+                    'passport_number' => $request->passport_number,
+                    'gender' => $request->gender,
+                    'address' => $request->address,
+                    'city' => $request->city,
+                    'profession' => $request->profession,
+                    'marital_status' => $request->marital_status,
+                    'religion' => $request->religion,
+                ]);
+            } else {
+                $homeowner->update([
+                    'full_name' => $request->full_name,
+                    'image' => $request->file('image') ? $request->file('image')->store('homeowners') : $homeowner->image,
+                    'national_id' => $request->national_id,
+                    'nid_front_image' => $request->file('nid_front_image') ? $request->file('nid_front_image')->store('homeowners') : $homeowner->nid_front_image,
+                    'nid_back_image' => $request->file('nid_back_image') ? $request->file('nid_back_image')->store('homeowners') : $homeowner->nid_back_image,
+                    'passport_number' => $request->passport_number,
+                    'gender' => $request->gender,
+                    'address' => $request->address,
+                    'city' => $request->city,
+                    'profession' => $request->profession,
+                    'marital_status' => $request->marital_status,
+                    'religion' => $request->religion,
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', $th->getMessage());
+        }
 
-        $homeowner->update([
-            'full_name' => $request->full_name,
-            'image' => $request->file('image') ? $request->file('image')->store('homeowners') : $homeowner->image,
-            'national_id' => $request->national_id,
-            'nid_front_image' => $request->file('nid_front_image') ? $request->file('nid_front_image')->store('homeowners') : $homeowner->nid_front_image,
-            'nid_back_image' => $request->file('nid_back_image') ? $request->file('nid_back_image')->store('homeowners') : $homeowner->nid_back_image,
-            'passport_number' => $request->passport_number,
-            'gender' => $request->gender,
-            'address' => $request->address,
-            'city' => $request->city,
-            'profession' => $request->profession,
-            'marital_status' => $request->marital_status,
-            'religion' => $request->religion,
-        ]);
 
         return redirect()->route('homeowner.dashboard')->with('success', 'Profile updated successfully.');
+    }
+
+    public function viewFullProfile()
+    {
+        $user = Auth::user();
+        $homeowner = Homeowners::where('user_id', $user->id)->first();
+        return view('homeowner.view', compact('homeowner'));
     }
 }

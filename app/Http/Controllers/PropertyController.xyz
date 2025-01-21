@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Properties;
+use App\Models\Homeowner;
+use Illuminate\Http\Request;
+
+class PropertyController extends Controller
+{
+    public function store(Request $request)
+    {
+        // Validate the input data
+        $request->validate([
+            'homeowner_id' => 'required|exists:homeowners,id', // Ensure the homeowner exists
+            'building_image' => 'nullable|image', // Validate image upload
+            'holding_number' => 'nullable|string',
+            'holding_tax_number' => 'nullable|string',
+            'google_map_link' => 'nullable|url',
+            'total_flat' => 'nullable|string',
+            'total_floor' => 'nullable|string',
+        ]);
+
+        // Handle the image upload if present
+        $imagePath = null;
+        if ($request->hasFile('building_image')) {
+            $imagePath = $request->file('building_image')->store('homeowners', 'public');
+        }
+
+
+        // Create a new property associated with the homeowner
+        Properties::create([
+            'homeowner_id' => $request->homeowner_id,
+            'building_image' => $imagePath,
+            'holding_number' => $request->holding_number,
+            'holding_tax_number' => $request->holding_tax_number,
+            'google_map_link' => $request->google_map_link,
+            'total_flat' => $request->total_flat,
+            'total_floor' => $request->total_floor,
+        ]);
+        dd($request->all());
+        return redirect()->back()->with('success', 'Property added successfully!');
+    }
+}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Homeowners;
 use App\Models\User;
 use App\Models\Tenants; // Import the Tenants model
 use Illuminate\Http\Request;
@@ -111,23 +112,12 @@ class AccountController extends Controller
         return view('account.profile', compact('user'));
     }
 
-    // Tenant dashboard
-    public function tenantDashboard()
-    {
-        return view('tenant.dashboard'); // Ensure this view exists
-    }
-
-    // Tenant profile page
-    public function tenantProfile()
-    {
-        $user = Auth::user();
-        $tenant = $user->tenants; // Load the tenant profile through the relationship in the User model
-        return view('tenant.profile', compact('user', 'tenant'));
-    }
 
     // Homeowner dashboard
     public function homeownerDashboard()
     {
-        return view('homeowner.dashboard'); // Ensure this view exists
+        $user = Auth::user();
+        $homeowner = Homeowners::where('user_id', $user->id)->first();
+        return view('homeowner.dashboard', compact('homeowner')); // Ensure this view exists
     }
 }

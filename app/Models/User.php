@@ -51,4 +51,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Tenants::class); // Refer to the correct model name
     }
+    public function homeowner()
+    {
+        return $this->hasOne(Homeowners::class); // Refer to the correct model name
+    }
 }

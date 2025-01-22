@@ -10,9 +10,9 @@
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-3">
-                        @if (Auth::user()->image != "")
-                            <img src="{{ asset('uploads/profile/'.Auth::user()->image) }}" class="img-fluid rounded-circle" alt="Luna John">                            
-                        @endif
+                        @if (!empty(Auth::user()->image))
+                        <img src="{{ url('uploads/profile/' . Auth::user()->image) }}" class="img-fluid rounded-circle" alt="{{ Auth::user()->full_name }}">
+                    @endif
                     </div>
                     <div class="h5 text-center">
                         <strong>{{ Auth::user()->name }}</strong>

@@ -5,9 +5,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\HomeownerController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\PropertyController;
-
-
-
+use App\Http\Controllers\SecurityAdmin;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,3 +29,7 @@ Route::get('/homeowner/profile', [HomeownerController::class, 'viewFullProfile']
 
 
 Route::resource('property', PropertyController::class);
+
+
+
+Route::get('security/dashboard', [SecurityAdmin::class, 'dashboard'])->name('security_admin.dashboard');

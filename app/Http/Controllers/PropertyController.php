@@ -14,7 +14,7 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        $properties = Properties::where('user_id', Auth::id())->get();
+        $properties = Properties::where('homeowner_id', Auth::user()->homeowner->id)->get();
         return view('homeowner.property', compact('properties'));
     }
 
@@ -33,7 +33,6 @@ class PropertyController extends Controller
     {
 
         $request->validate([
-            'homeowner_id' => 'required|exists:homeowners,id', // Ensure the homeowner exists
             'building_image' => 'nullable|image', // Validate image upload
             'holding_number' => 'nullable|string',
             'holding_tax_number' => 'nullable|string',
@@ -43,7 +42,7 @@ class PropertyController extends Controller
         ]);
 
         $property = new Properties();
-        $property->homeowner_id = Auth::id();
+        $property->homeowner_id = Auth::user()->homeowner->id;
         $property->building_image = $request->building_image;
         $property->holding_number = $request->holding_number;
         $property->holding_tax_number = $request->holding_tax_number;

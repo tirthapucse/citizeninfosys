@@ -12,11 +12,11 @@
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="text-center flex-grow-1">
-                        <h1><a href="#" class="h3 text-white text-decoration-none">Citizen Information Management System</a></h1>
+                        <h1><a href="#" class="h3 text-white text-decoration-none">Citizen Info Sys</a></h1>
                     </div>
                     <div class="navigation">
                         @if(Auth::check())
-                            <a href="{{ route('account.profile') }}" class="text-white">My Account</a>
+                            <a href="{{ route('account.profile') }}" class="text-white"></a>
                         @endif    
                     </div>
                 </div>

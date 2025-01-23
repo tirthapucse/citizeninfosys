@@ -13,6 +13,7 @@ class Tenants extends Model
 
     protected $fillable = [
         'user_id',
+        'full_name',
         'image',
         'national_id',
         'nid_front_image',

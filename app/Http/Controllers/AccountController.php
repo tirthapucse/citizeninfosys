@@ -98,7 +98,10 @@ class AccountController extends Controller
                 case 'homeowner':
                     return redirect()->route('homeowner.dashboard')->with('success', 'Welcome to Homeowner Dashboard!');
                 case 'security_admin':
-                    return redirect()->route('security_admin.dashboard')->with('success', 'Welcome to SA Dashboard!');
+                    return redirect()->route('security_admin.dashboard')->with('success', 'Welcome to Security Admin Dashboard!');
+                case 'super_admin':
+                    return redirect()->route('super_admin.dashboard')->with('success', 'Welcome to Super Admin Dashboard!');
+
                 default:
                     return redirect()->route('account.login')->with('error', 'Unable to determine role, please login again.');
             }

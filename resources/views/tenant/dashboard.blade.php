@@ -11,8 +11,9 @@
                         </div>
                         <div class="card-body">
                             <div class="text-center mb-3">
-                                <img src="{{ asset('uploads/profile/' . Auth::user()->tenant->image) }}" class="img-fluid rounded-circle" alt="{{ Auth::user()->name }}">                            
-                            </div>
+                                @if (!empty(Auth::user()->tenant->image))
+                                <img src="{{ asset('private/' . Auth::user()->tenant->image) }}" class="img-fluid rounded-circle" alt="{{ Auth::user()->full_name }}">
+                            @endif                                </div>
                             <div class="h5 text-center">
                                 @if(Auth::user()->role === 'tenant')
                                     <div class="h5 text-center">

@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeownerController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SecurityAdmin;
+use App\Http\Controllers\SuperAdmin;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,3 +34,4 @@ Route::resource('property', PropertyController::class);
 
 
 Route::get('security/dashboard', [SecurityAdmin::class, 'dashboard'])->name('security_admin.dashboard');
+Route::get('super/dashboard', [SuperAdmin::class, 'dashboard'])->name('super_admin.dashboard');

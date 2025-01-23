@@ -32,10 +32,13 @@
                         <div class="card-body sidebar">
                             <ul class="nav flex-column">
                                 <li class="nav-item">
-                                    <a href="book-listing.html">My Profile</a>                               
+                                    <a href="{{ route('homeowner.dashboard') }}">My Profile</a>                               
                                 </li>
                                 <li class="nav-item">
-                                    <a href="book-listing.html">View Profile</a>                               
+                                    <a href="{{ route('homeowner.view') }}">View Profile</a>                               
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('property.create') }}">Add Property</a>                               
                                 </li>
                                 <li class="nav-item">
                                     <a href="login.html">Logout</a>

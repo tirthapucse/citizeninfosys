@@ -53,6 +53,7 @@ class TenantController extends Controller
                     'nid_front_image' => $request->file('nid_front_image') ? $request->file('nid_front_image')->store('homeowners') : null,
                     'nid_back_image' => $request->file('nid_back_image') ? $request->file('nid_back_image')->store('homeowners') : null,
                     'passport_number' => $request->passport_number,
+                    'phone' => $request->phone,
                     'gender' => $request->gender,
                     'address' => $request->address,
                     'city' => $request->city,
@@ -68,6 +69,7 @@ class TenantController extends Controller
                     'nid_front_image' => $request->file('nid_front_image') ? $request->file('nid_front_image')->store('homeowners') : $tenant->nid_front_image,
                     'nid_back_image' => $request->file('nid_back_image') ? $request->file('nid_back_image')->store('homeowners') : $tenant->nid_back_image,
                     'passport_number' => $request->passport_number,
+                    'phone' => $request->phone,
                     'gender' => $request->gender,
                     'address' => $request->address,
                     'city' => $request->city,
@@ -81,5 +83,12 @@ class TenantController extends Controller
         }
 
         return redirect()->route('tenant.dashboard')->with('success', 'Profile updated successfully.');
+    }
+
+    public function viewFullProfile()
+    {
+        $user = Auth::user();
+        $tenant = Tenants::where('user_id', $user->id)->first();
+        return view('tenant.view', compact('tenant'));
     }
 }

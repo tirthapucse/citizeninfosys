@@ -125,4 +125,10 @@ class AccountController extends Controller
         $homeowner = Homeowners::where('user_id', $user->id)->first();
         return view('homeowner.dashboard', compact('homeowner')); // Ensure this view exists
     }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('account.login');
+    }
 }

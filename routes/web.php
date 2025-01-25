@@ -21,6 +21,7 @@ Route::get('account/profile', [AccountController::class, 'profile'])->name('acco
 Route::get('tenant/dashboard', [TenantController::class, 'tenantDashboard'])->name('tenant.dashboard');
 Route::post('tenant/update-profile', [TenantController::class, 'updateProfile'])->name('tenant.updateProfile');
 Route::get('tenant/edit-profile', [TenantController::class, 'edit'])->name('tenant.editProfile');
+Route::get('/tenant/profile', [TenantController::class, 'viewFullProfile'])->name('tenant.view');
 
 
 Route::get('homeowner/dashboard', [AccountController::class, 'homeownerDashboard'])->name('homeowner.dashboard');
@@ -35,3 +36,5 @@ Route::resource('property', PropertyController::class);
 
 Route::get('security/dashboard', [SecurityAdmin::class, 'dashboard'])->name('security_admin.dashboard');
 Route::get('super/dashboard', [SuperAdmin::class, 'dashboard'])->name('super_admin.dashboard');
+
+Route::get('logout', [AccountController::class, 'logout'])->name('account.logout');

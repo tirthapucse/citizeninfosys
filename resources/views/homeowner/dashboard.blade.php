@@ -41,7 +41,7 @@
                                     <a href="{{ route('property.create') }}">Add Property</a>                               
                                 </li>
                                 <li class="nav-item">
-                                    <a href="login.html">Logout</a>
+                                    <a href="{{ route('account.logout') }}">Logout</a>
                                 </li>                           
                             </ul>
                         </div>

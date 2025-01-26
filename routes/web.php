@@ -35,6 +35,14 @@ Route::resource('property', PropertyController::class);
 
 
 Route::get('security/dashboard', [SecurityAdmin::class, 'dashboard'])->name('security_admin.dashboard');
+// In routes/web.php
+Route::get('/security-admin/search', [SecurityAdmin::class, 'searchUsers'])->name('security_admin.search');
+
+
 Route::get('super/dashboard', [SuperAdmin::class, 'dashboard'])->name('super_admin.dashboard');
+Route::get('/super/users', [SuperAdmin::class, 'listUsers'])->name('superadmin.users');
+Route::delete('/superadmin/users/{id}', [SuperAdmin::class, 'deleteUser'])->name('superadmin.users.delete');
+
+
 
 Route::get('logout', [AccountController::class, 'logout'])->name('account.logout');

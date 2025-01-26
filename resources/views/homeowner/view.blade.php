@@ -43,7 +43,7 @@
                                     <a href="{{ route('property.create') }}">Add Property</a>                               
                                 </li>
                                 <li class="nav-item">
-                                    <a href="login.html">Logout</a>
+                                    <a href="{{ route('account.logout') }}">Logout</a>
                                 </li>                           
                             </ul>
                         </div>
@@ -100,6 +100,11 @@
                                                 <th>Gender</th>
                                                 <td>{{ ucfirst($homeowner->gender) }}</td>
                                             </tr>
+                                            <tr>
+                                                <th>Total Property</th>
+                                                <td></td>
+                                            </tr>
+
                                         </table>
                                     </div>
                                     <div class="card-footer text-right">

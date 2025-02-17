@@ -131,4 +131,15 @@ class AccountController extends Controller
         Auth::logout();
         return redirect()->route('account.login');
     }
+
+    public function verifyUser($id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->role === 'tenant' || $user->role === 'homeowner') {
+            $user->update(['verified' => true]);
+        }
+
+        return back()->with('success', 'User verified successfully.');
+    }
 }

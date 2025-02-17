@@ -19,6 +19,11 @@
                             <h5><strong>{{ Auth::user()->tenant->full_name }}</strong></h5>
                             <p class="h6 mt-2 text-muted">Tenant</p>
                         @endif
+                        <p class="h6 mt-2 text-muted">
+                            @if(Auth::user()->verified)
+                                ✔ Verified Profile
+                            @endif
+                        </p>
                     </div>
                 </div>
 
@@ -35,7 +40,10 @@
                                 <a href="{{ route('tenant.view') }}" class="nav-link">View Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">Logout</a>
+                                <a href="{{ route('tenant.requests') }}" class="nav-link">Requests</a>                               
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('account.logout') }}" class="nav-link">Logout</a>
                             </li>
                         </ul>
                     </div>

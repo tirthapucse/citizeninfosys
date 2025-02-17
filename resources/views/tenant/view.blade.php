@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@include('layouts.message')
-
 @section('main')
     <section>
         <div class="container">
@@ -38,10 +36,13 @@
                                     <a href="{{ route('tenant.view') }}">View Profile</a>                               
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#">Edit Profile</a>                               
+                                    <a href="{{ route('tenant.requests') }}" class="nav-link">Requests</a>                               
                                 </li>
                                 <li class="nav-item">
-                                    <a href="login.html">Logout</a>
+                                    <a href="{{ route('tenant.dashboard') }}">Edit Profile</a>                               
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('account.logout') }}">Logout</a>
                                 </li>                           
                             </ul>
                         </div>
@@ -104,12 +105,18 @@
                                     </tr>
                                     <tr>
                                         <th>Present Location</th>
-                                        <td>SweetHome 137/6 Patharghata , Chattogram</td>
+                                        <td>
+                                            @if ($tenant->rent)
+                                                {{ $tenant->rent->property->building_address }}
+                                            @else
+                                                <span class="text-muted">No property assigned</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
                             <div class="card-footer text-right">
-                                <a href="#" class="btn btn-primary">Edit Profile</a>
+                                <a href="{{ route('tenant.dashboard') }}" class="btn btn-primary">Edit Profile</a>
                             </div>
                         </div>
                     </div>                

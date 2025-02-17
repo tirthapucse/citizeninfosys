@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tenants;
+use App\Models\Rents;
+use App\Models\Properties;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +16,9 @@ class TenantController extends Controller
     public function tenantDashboard()
     {
         $user = Auth::user();
+        // if (!$user->verified) {
+        //     return redirect()->back()->with('error', 'User not verified!');
+        // }
         $tenant = Tenants::where('user_id', $user->id)->first();
         return view('tenant.dashboard', compact('tenant')); // Ensure this view exists
 
@@ -89,7 +95,50 @@ class TenantController extends Controller
     public function viewFullProfile()
     {
         $user = Auth::user();
-        $tenant = Tenants::where('user_id', $user->id)->first();
+        $tenant = Tenants::with('rent.property')->where('user_id', $user->id)->first();
         return view('tenant.view', compact('tenant'));
+    }
+
+    public function searchTenant(Request $request)
+    {
+        $search = $request->search;
+        $tenants = Tenants::where('full_name', 'LIKE', "%{$search}%")
+            ->orWhere('id', 'LIKE', "%{$search}%")
+            ->get();
+
+        return response($tenants);
+    }
+
+    public function rentalRequests()
+    {
+        $user = Auth::user();
+        // if (!$user->verified) {
+        //     return redirect()->back()->with('error', 'User not verified!');
+        // }
+        $tenant = Tenants::where('user_id', $user->id)->first();
+
+        // Fetch rental requests for the logged-in tenant
+        $rentalRequests = Rents::where('tenant_id', $tenant->id)
+            ->where('status', false) // Only show pending requests
+            ->with('property.homeowner') // Eager load homeowner details
+            ->get();
+
+        return view('tenant.request', compact('rentalRequests'));
+    }
+
+    public function acceptRequest(Request $request)
+    {
+        $tenant_id = $request->tenant_id;
+        $property_id = $request->property_id;
+        $rent = Rents::where('tenant_id', $tenant_id)
+            ->where('status', false)
+            ->where('property_id', $property_id)->first();
+        if ($rent) {
+            $rent->status = true;
+            $rent->save();
+        } else {
+            return redirect()->back()->with('error', 'There is no rent request');
+        }
+        return redirect()->route('tenant.requests')->with('success', 'Request Accepted Successfully.');
     }
 }

@@ -22,6 +22,11 @@
                                         <p class="h6 mt-2 text-muted">Homeowner</p>
                                     </div>
                                 @endif
+                                <p class="h6 mt-2 text-muted">
+                                    @if(Auth::user()->verified)
+                                        ✔ Verified Profile
+                                    @endif
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -39,6 +44,9 @@
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('property.create') }}">Add Property</a>                               
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('homeowner.rental') }}">Rent Request</a>                               
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('account.logout') }}">Logout</a>

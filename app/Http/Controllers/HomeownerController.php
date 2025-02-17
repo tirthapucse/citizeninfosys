@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Homeowners;
+use App\Models\Rents;
+use App\Models\Tenants;
+use App\Models\Properties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -83,5 +86,46 @@ class HomeownerController extends Controller
         $user = Auth::user();
         $homeowner = Homeowners::where('user_id', $user->id)->first();
         return view('homeowner.view', compact('homeowner'));
+    }
+
+    public function searchTenant(Request $request)
+    {
+        $search = $request->search;
+        $tenants = Tenants::where('full_name', 'LIKE', "%{$search}%")
+            ->orWhere('id', 'LIKE', "%{$search}%")
+            ->get();
+
+        $user = Auth::user();
+        $homeowner = Homeowners::where('user_id', $user->id)->first();
+        $properties = Properties::where('homeowner_id', $homeowner->id)->get();
+
+        return view('homeowner.rental', compact('tenants', 'properties'));
+    }
+
+    public function sentRequest(Request $request)
+    {
+        $tenant_id = $request->tenant_id;
+        $property_id = $request->property_id;
+        $rent = Rents::where('tenant_id', $tenant_id)->where('status', true)->first();
+
+        if ($rent) {
+            return redirect()->back()->with('error', 'Already Active in Rent');
+        } else {
+            // Check if any existing inactive rent exists and delete it
+            Rents::where('tenant_id', $tenant_id)->where('status', false)->delete();
+
+            // Create a new rent request
+            Rents::create(['tenant_id' => $tenant_id, 'property_id' => $property_id, 'status' => false]);
+        }
+        return redirect()->route('homeowner.rental')->with('success', 'Sent Successfully.');
+    }
+
+    public function rental()
+    {
+        $user = Auth::user();
+        $homeowner = Homeowners::where('user_id', $user->id)->first();
+        $properties = Properties::where('homeowner_id', $homeowner->id)->get();
+
+        return view('homeowner.rental', compact('properties'));
     }
 }

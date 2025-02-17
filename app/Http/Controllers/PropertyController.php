@@ -23,7 +23,8 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        return view('homeowner.property');
+        $properties = Properties::where('homeowner_id', Auth::user()->homeowner->id)->get();
+        return view('homeowner.property', compact('properties'));
     }
 
     /**
@@ -39,6 +40,8 @@ class PropertyController extends Controller
             'google_map_link' => 'nullable|url',
             'total_flat' => 'nullable|string',
             'total_floor' => 'nullable|string',
+            'building_name' => 'nullable|string|max:255',
+            'building_address' => 'nullable|string|max:255',
         ]);
 
         $property = new Properties();
@@ -49,6 +52,8 @@ class PropertyController extends Controller
         $property->google_map_link = $request->google_map_link;
         $property->total_flat = $request->total_flat;
         $property->total_floor = $request->total_floor;
+        $property->building_name = $request->building_name;
+        $property->building_address = $request->building_address;
 
 
         if ($request->hasFile('building_image')) {
@@ -87,6 +92,8 @@ class PropertyController extends Controller
             'google_map_link' => 'nullable|url',
             'total_flat' => 'nullable|string',
             'total_floor' => 'nullable|string',
+            'building_name' => 'nullable|string|max:255',
+            'building_address' => 'nullable|string|max:255',
         ]);
 
         $property = Properties::findOrFail($id);
@@ -96,6 +103,8 @@ class PropertyController extends Controller
         $property->google_map = $request->google_map;
         $property->total_flat = $request->total_flat;
         $property->total_floor = $request->total_floor;
+        $property->building_name = $request->building_name;
+        $property->building_address = $request->building_address;
 
         if ($request->hasFile('building_image')) {
             $property->building_image = $request->file('building_image')->store('building_images');

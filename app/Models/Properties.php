@@ -9,6 +9,8 @@ class Properties extends Model
     protected $table = 'property';
     protected $fillable = [
         'homeowner_id',
+        'building_name',
+        'building_address',
         'building_image',
         'holding_number',
         'holding_tax_number',
@@ -19,5 +21,10 @@ class Properties extends Model
     public function homeowner()
     {
         return $this->belongsTo(Homeowners::class);
+    }
+
+    public function tenants()
+    {
+        return $this->hasMany(Tenants::class, 'property_id');
     }
 }

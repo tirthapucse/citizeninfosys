@@ -42,6 +42,8 @@
                     @include('layouts.message')
                     <h2>Users List</h2>
 
+                    <button class="btn btn-primary mb-3" onclick="printPage()">Print All</button>
+
                     <table class="table table-striped table-bordered">
                         <thead class="thead-dark">
                             <tr>
@@ -59,7 +61,7 @@
                                     <td>Tenant</td>
                                     <td>{{ $tenant->user->email ?? 'N/A' }}</td>
                                     <td>{{ $tenant->address ?? 'N/A' }}</td>
-                                    <td><button class="btn btn-primary" onclick="window.print()">Print</button></td>
+                                    <td><button class="btn btn-primary" onclick="printUser('tenant', {{ $tenant->id }})">Print</button></td>
                                 </tr>
                             @endforeach
                             
@@ -69,23 +71,24 @@
                                     <td>Homeowner</td>
                                     <td>{{ $homeowner->user->email ?? 'N/A' }}</td>
                                     <td>{{ $homeowner->address ?? 'N/A' }}</td>
-                                    <td><button class="btn btn-primary" onclick="window.print()">Print</button></td>
+                                    <td><button class="btn btn-primary" onclick="printUser('homeowner', {{ $homeowner->id }})">Print</button></td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-
-                    
                 </div>
             </div>
         </div>
     </section>
+
+    <script>
+        function printPage() {
+            window.print();
+        }
+
+        function printUser(type, id) {
+            // You can redirect to a specific print page or open a new window with the user's details
+            window.open(`/print/${type}/${id}`, '_blank');
+        }
+    </script>
 @endsection
-
-
-
-
-
-
-
-

@@ -67,24 +67,41 @@ class SecurityAdmin extends Controller
     // app/Http/Controllers/AdminController.php
     public function searchUsers(Request $request)
     {
-        $query = $request->input('search');
+        $query = $request->input('query');
 
-        $tenants = Tenants::whereNotNull('full_name') // Ensure full_name exists
-            ->where('full_name', 'LIKE', "%{$query}%")
-            ->whereHas('user', function ($q) use ($query) {
-                $q->where('email', 'LIKE', "%{$query}%");
+        $tenants = Tenants::whereNotNull('full_name')
+            ->where(function ($q) use ($query) {
+                $q->where('full_name', 'LIKE', "%{$query}%")
+                    ->orWhereHas('user', function ($q) use ($query) {
+                        $q->where('email', 'LIKE', "%{$query}%");
+                    });
             })
             ->with(['user:id,email'])
             ->get();
 
         $homeowners = Homeowners::whereNotNull('full_name')
-            ->where('full_name', 'LIKE', "%{$query}%")
-            ->whereHas('user', function ($q) use ($query) {
-                $q->where('email', 'LIKE', "%{$query}%");
+            ->where(function ($q) use ($query) {
+                $q->where('full_name', 'LIKE', "%{$query}%")
+                    ->orWhereHas('user', function ($q) use ($query) {
+                        $q->where('email', 'LIKE', "%{$query}%");
+                    });
             })
             ->with(['user:id,email'])
             ->get();
 
         return view('security_admin.search_results', compact('tenants', 'homeowners'));
+    }
+
+    public function printUser($type, $id)
+    {
+        if ($type === 'tenant') {
+            $user = Tenants::with('user')->findOrFail($id);
+        } elseif ($type === 'homeowner') {
+            $user = Homeowners::with('user')->findOrFail($id);
+        } else {
+            abort(404);
+        }
+
+        return view('security_admin.print_user', compact('user', 'type'));
     }
 }

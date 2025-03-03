@@ -18,7 +18,7 @@
                             <div class="h5 text-center">
                                 @if(Auth::user()->role === 'homeowner')
                                     <div class="h5 text-center">
-                                        <strong>{{ Auth::user()->name }}</strong>
+                                        <strong>{{ Auth::user()->full_name }}</strong>
                                         <p class="h6 mt-2 text-muted">Homeowner</p>
                                     </div>
                                 @endif

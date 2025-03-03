@@ -6,9 +6,12 @@ use App\Models\Homeowners;
 use App\Models\Rents;
 use App\Models\Tenants;
 use App\Models\Properties;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
 
 class HomeownerController extends Controller
 {
@@ -85,8 +88,26 @@ class HomeownerController extends Controller
     {
         $user = Auth::user();
         $homeowner = Homeowners::where('user_id', $user->id)->first();
-        return view('homeowner.view', compact('homeowner'));
+        $properties = Properties::where('homeowner_id', $homeowner->id)->get(); // Fetch homeowner's properties
+
+        $qrCode = null;
+        if ($user->verified) {
+            // Build QR code string with homeowner and property details
+            $dataString = "Name: {$homeowner->full_name}\n"
+                . "Phone: {$homeowner->phone}\n"
+                . "Address: {$homeowner->address}\n"
+                . "Properties:\n";
+
+            foreach ($properties as $property) {
+                $dataString .= "- {$property->building_name}, {$property->building_address}\n";
+            }
+
+            $qrCode = QrCode::size(300)->generate($dataString);
+        }
+
+        return view('homeowner.view', compact('homeowner', 'qrCode', 'properties'));
     }
+
 
     public function searchTenant(Request $request)
     {
@@ -106,19 +127,41 @@ class HomeownerController extends Controller
     {
         $tenant_id = $request->tenant_id;
         $property_id = $request->property_id;
-        $rent = Rents::where('tenant_id', $tenant_id)->where('status', true)->first();
 
+        // Get the tenant's user account
+        $tenant = Tenants::find($tenant_id);
+        if (!$tenant) {
+            return redirect()->back()->with('error', 'Tenant not found');
+        }
+
+        // Check if the user is verified
+        $user = User::find($tenant->user_id);
+        if (!$user || !$user->verified) {
+            return redirect()->back()->with('error', 'User is not verified');
+        }
+
+        // Check if tenant already has an active rent
+        $rent = Rents::where('tenant_id', $tenant_id)->where('status', true)->first();
         if ($rent) {
             return redirect()->back()->with('error', 'Already Active in Rent');
-        } else {
-            // Check if any existing inactive rent exists and delete it
-            Rents::where('tenant_id', $tenant_id)->where('status', false)->delete();
-
-            // Create a new rent request
-            Rents::create(['tenant_id' => $tenant_id, 'property_id' => $property_id, 'status' => false]);
         }
+
+        // Delete any existing inactive rent requests
+        Rents::where('tenant_id', $tenant_id)->where('status', false)->delete();
+
+        // Create a new rent request
+        Rents::create([
+            'tenant_id' => $tenant_id,
+            'property_id' => $property_id,
+            'status' => false
+        ]);
+
         return redirect()->route('homeowner.rental')->with('success', 'Sent Successfully.');
     }
+
+
+
+
 
     public function rental()
     {

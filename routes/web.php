@@ -7,6 +7,8 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\SecurityAdmin;
 use App\Http\Controllers\SuperAdmin;
+use App\Models\Homeowners;
+use App\Models\Tenants;
 
 Route::get('/', function () {
     return view('welcome');
@@ -61,11 +63,20 @@ Route::get('/homeowners/edit/{id}', [SuperAdmin::class, 'editHomeowner'])->name(
 Route::put('/homeowners/update/{id}', [SuperAdmin::class, 'updateHomeowner'])->name('superadmin.homeowners.update');
 Route::patch('/superadmin/users/verify/{id}', [AccountController::class, 'verifyUser'])
     ->name('superadmin.users.verify');
-
-
+Route::get('super/activeuser', [SuperAdmin::class, 'activeUserList'])->name('super_admin.activeuser');
+Route::get('/properties', [SuperAdmin::class, 'listProperties'])->name('superadmin.properties');
+Route::delete('/properties/{id}', [SuperAdmin::class, 'deleteProperty'])->name('superadmin.properties.delete');
+Route::get('/properties', [SuperAdmin::class, 'listProperties'])->name('superadmin.properties');
+Route::get('/properties/{id}/edit', [SuperAdmin::class, 'editProperty'])->name('superadmin.properties.edit');
+Route::put('/properties/{id}', [SuperAdmin::class, 'updateProperty'])->name('superadmin.properties.update');
+Route::delete('/properties/{id}', [SuperAdmin::class, 'deleteProperty'])->name('superadmin.properties.delete');
 
 Route::get('logout', [AccountController::class, 'logout'])->name('account.logout');
 
 
 
 Route::get('search/tenant', [TenantController::class, 'searchTenant'])->name('tenant.search');
+
+
+
+Route::get('/print/{type}/{id}', [SecurityAdmin::class, 'printUser'])->name('print.user');

@@ -22,6 +22,8 @@
                         <p class="h6 mt-2 text-muted">
                             @if(Auth::user()->verified)
                                 ✔ Verified Profile
+                            @else
+                                Unverified - Account is not verified!
                             @endif
                         </p>
                     </div>
@@ -71,25 +73,44 @@
                             <!-- Profile Image -->
                             <div class="mb-3">
                                 <label for="image" class="form-label">Profile Image</label>
-                                <input type="file" name="image" id="image" class="form-control">
+                                <input type="file" name="image" id="image" class="form-control" onchange="previewImage(event, 'profilePreview')">
+                                <!-- Display existing profile image if it exists -->
+                                @if (!empty(Auth::user()->tenant->image))
+                                    <img id="profilePreview" src="{{ asset('private/' . Auth::user()->tenant->image) }}" alt="Profile Image Preview" class="mt-2" style="max-width: 200px; max-height: 200px;">
+                                @else
+                                    <img id="profilePreview" src="#" alt="Profile Image Preview" class="mt-2" style="display: none; max-width: 200px; max-height: 200px;">
+                                @endif
                             </div>
 
                             <!-- National ID -->
                             <div class="mb-3">
                                 <label for="national_id" class="form-label">National ID</label>
-                                <input type="text" name="national_id" id="national_id" class="form-control" value="{{ old('national_id', Auth::user()->tenant->national_id ?? '') }}" maxlength="10">
+                                <input type="text" name="national_id" id="national_id" class="form-control" value="{{ old('national_id', Auth::user()->tenant->national_id ?? '') }}" maxlength="10" oninput="validateNID(this)">
+                                <span id="nidError" class="text-danger" style="display: none;">এনআইডি এর নাম্বার ভুল দিয়েছেন</span>
                             </div>
 
                             <!-- NID Front Image -->
                             <div class="mb-3">
                                 <label for="nid_front_image" class="form-label">NID Front Image</label>
-                                <input type="file" name="nid_front_image" id="nid_front_image" class="form-control">
+                                <input type="file" name="nid_front_image" id="nid_front_image" class="form-control" onchange="previewImage(event, 'nidFrontPreview')">
+                                <!-- Display existing NID front image if it exists -->
+                                @if (!empty(Auth::user()->tenant->nid_front_image))
+                                    <img id="nidFrontPreview" src="{{ asset('private/' . Auth::user()->tenant->nid_front_image) }}" alt="NID Front Preview" class="mt-2" style="max-width: 200px; max-height: 200px;">
+                                @else
+                                    <img id="nidFrontPreview" src="#" alt="NID Front Preview" class="mt-2" style="display: none; max-width: 200px; max-height: 200px;">
+                                @endif
                             </div>
 
                             <!-- NID Back Image -->
                             <div class="mb-3">
                                 <label for="nid_back_image" class="form-label">NID Back Image</label>
-                                <input type="file" name="nid_back_image" id="nid_back_image" class="form-control">
+                                <input type="file" name="nid_back_image" id="nid_back_image" class="form-control" onchange="previewImage(event, 'nidBackPreview')">
+                                <!-- Display existing NID back image if it exists -->
+                                @if (!empty(Auth::user()->tenant->nid_back_image))
+                                    <img id="nidBackPreview" src="{{ asset('private/' . Auth::user()->tenant->nid_back_image) }}" alt="NID Back Preview" class="mt-2" style="max-width: 200px; max-height: 200px;">
+                                @else
+                                    <img id="nidBackPreview" src="#" alt="NID Back Preview" class="mt-2" style="display: none; max-width: 200px; max-height: 200px;">
+                                @endif
                             </div>
 
                             <!-- Passport Number -->
@@ -152,4 +173,37 @@
         </div>
     </div>
 </section>
+
+
+
+<script>
+    function previewImage(event, previewId) {
+        const input = event.target;
+        const preview = document.getElementById(previewId);
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.src = '#';
+            preview.style.display = 'none';
+        }
+
+        // Function to validate NID input
+    function validateNID(input) {
+        const nidError = document.getElementById('nidError');
+        if (input.value.length > 10) {
+            nidError.style.display = 'block'; // Show error message
+        } else {
+            nidError.style.display = 'none'; // Hide error message
+        }
+    }
+    }
+</script>
 @endsection

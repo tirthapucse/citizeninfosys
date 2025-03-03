@@ -53,14 +53,21 @@
                           <p class="mb-2">Registered New Tenants</p>
                           <p class="fs-4 fw-bold mb-1">{{ $totalTenants }}</p>
                         </button>
-                        <button class="btn btn-info w-auto p-4 text-start">
+                        <button class="btn btn-danger w-auto p-4 text-start">
                           <p class="mb-2">Registered New Properties</p>
+                          <a href="{{ route('superadmin.properties') }}">
                           <p class="fs-4 fw-bold mb-1">{{ $totalProperty }}</p>
                         </button>
                         <button class="btn btn-danger w-auto p-4 text-start">
                             <a href="{{ route('superadmin.users') }}" class="btn btn-danger w-auto p-4 text-start text-decoration-none">
                                 <p class="mb-2">Total Number of Users</p>
                                 <p class="fs-4 fw-bold mb-1">{{ $totalUsers }}</p>
+                              </a>
+                        </button>
+                        <button class="btn btn-danger w-auto p-4 text-start">
+                            <a href="{{ route('super_admin.activeuser') }}" class="btn btn-danger w-auto p-4 text-start text-decoration-none">
+                                <p class="mb-2">Homeowners & Tenants</p>
+                                
                               </a>
                         </button>
                       </div>

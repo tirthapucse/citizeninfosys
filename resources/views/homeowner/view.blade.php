@@ -104,8 +104,11 @@
                                                 <th>Total Property</th>
                                                 <td></td>
                                             </tr>
-
-                                        </table>
+                                            <tr>
+                                                <th>QR Code</th>
+                                                <td>{!! $qrCode !!}</td>
+                                            </tr>
+                                        </table>    
                                     </div>
                                     <div class="card-footer text-right">
                                         <a href="{{ route('homeowner.dashboard') }}" class="btn btn-primary">Edit Profile</a>

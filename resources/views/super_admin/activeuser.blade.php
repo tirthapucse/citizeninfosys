@@ -46,57 +46,38 @@
                     @include('layouts.message')
                     <div class="card border-0 shadow-lg">
                         <div class="card-header text-white">
-                            Users List
+                            Property Information
                         </div>
                         <div class="card-body">
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
+                                        <th>ID</th>
+                                        <th>Tenant Name</th>
+                                        <th>Homeowner Name</th>
+                                        <th>Property Address</th>
+                                        <th>Phone Number</th>
+                                        <th>NID</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($users as $user)
+                                    @foreach($rents as $rent)
                                     <tr>
-                                        <td>{{ $user->name }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->role }}</td>
+                                        <td>{{ $rent->id }}</td>
+                                        <td>{{ $rent->tenant->full_name }}</td>
+                                        <td>{{ $rent->property->homeowner->full_name }}</td>
+                                        <td>{{ $rent->property->building_address }}</td>
+                                        <td>{{ $rent->tenant->phone }}</td>
+                                        <td>{{ $rent->tenant->national_id }}</td>
                                         <td>
-                                            <!-- Edit User Button -->
-                                            <a href="{{ route('superadmin.users.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit User</a>
-                                        
-                                            <!-- Edit Tenant Button (if the user is a tenant) -->
-                                            @if($user->role == 'tenant' && $user->tenant)
-                                                <a href="{{ route('superadmin.tenants.edit', $user->tenant->id) }}" class="btn btn-info btn-sm">Edit Tenant</a>
-                                            @endif
-                                        
-                                            <!-- Edit Homeowner Button (if the user is a homeowner) -->
-                                            @if($user->role == 'homeowner' && $user->homeowner)
-                                                <a href="{{ route('superadmin.homeowners.edit', $user->homeowner->id) }}" class="btn btn-info btn-sm">Edit Homeowner</a>
-                                            @endif
-                                        
-                                            <!-- Approve/Verify Button -->
-                                            @if($user->role == 'tenant' || $user->role == 'homeowner')
-                                                <form action="{{ route('superadmin.users.verify', $user->id) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('PATCH')
-                                                    <button type="submit" class="btn btn-success btn-sm"
-                                                        @if($user->verified) disabled @endif>
-                                                        {{ $user->verified ? 'Verified' : 'Approve' }}
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        
-                                            <!-- Delete Button -->
-                                            <form action="{{ route('superadmin.users.delete', $user->id) }}" method="POST" style="display:inline;">
+                                            {{-- <a href="{{ route('properties.edit', $property->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            <form action="{{ route('properties.delete', $property->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
-                                        </td>                          
+                                            </form> --}}
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

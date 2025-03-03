@@ -113,6 +113,10 @@
                                             @endif
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <th>Qr Code</th>
+                                        <td>{!! $qrCode !!}</td>
+                                    </tr>
                                 </table>
                             </div>
                             <div class="card-footer text-right">

@@ -12,11 +12,16 @@ class Rents extends Model
 
     public function tenant()
     {
-        return $this->belongsTo(User::class, 'tenant_id');
+        return $this->belongsTo(Tenants::class, 'tenant_id');
     }
 
     public function property()
     {
         return $this->belongsTo(Properties::class, 'property_id');
+    }
+
+    public function homeowner()
+    {
+        return $this->belongsTo(Homeowners::class, 'homeowner_id');
     }
 }

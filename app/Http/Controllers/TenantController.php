@@ -9,7 +9,7 @@ use App\Models\Properties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class TenantController extends Controller
 {
@@ -96,8 +96,36 @@ class TenantController extends Controller
     {
         $user = Auth::user();
         $tenant = Tenants::with('rent.property')->where('user_id', $user->id)->first();
-        return view('tenant.view', compact('tenant'));
+
+        $qrCode = null;
+        if ($user->verified) {
+            // Prepare the data for QR Code
+            $qrData = [
+                "Tenant Name" => $tenant->full_name,
+                "National ID" => $tenant->national_id,
+                "Phone" => $tenant->phone,
+                "Address" => $tenant->address,
+                "City" => $tenant->city,
+                "Profession" => $tenant->profession,
+            ];
+
+            // Check if rent and property exist before adding location details
+            if (!empty($tenant->rent) && !empty($tenant->rent->property)) {
+                if (!empty($tenant->rent->property->building_address)) {
+                    $qrData["Current Location"] = $tenant->rent->property->building_address;
+                }
+                if (!empty($tenant->rent->property->building_name)) {
+                    $qrData["Building Name"] = $tenant->rent->property->building_name;
+                }
+            }
+
+            $qrCode = QrCode::size(200)->generate(json_encode($qrData, JSON_PRETTY_PRINT));
+        }
+
+        return view('tenant.view', compact('tenant', 'qrCode'));
     }
+
+
 
     public function searchTenant(Request $request)
     {
@@ -112,9 +140,9 @@ class TenantController extends Controller
     public function rentalRequests()
     {
         $user = Auth::user();
-        // if (!$user->verified) {
-        //     return redirect()->back()->with('error', 'User not verified!');
-        // }
+        if (!$user->verified) {
+            return redirect()->back()->with('error', 'User not verified!');
+        }
         $tenant = Tenants::where('user_id', $user->id)->first();
 
         // Fetch rental requests for the logged-in tenant
